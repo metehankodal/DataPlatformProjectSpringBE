@@ -1,6 +1,7 @@
 package com.example.tezspringbe;
 
 
+import com.example.tezspringbe.models.AnalysisRequest;
 import com.example.tezspringbe.models.Contact;
 import com.example.tezspringbe.models.Notice;
 import com.example.tezspringbe.repos.NoticeRepo;
@@ -29,6 +30,9 @@ public class NoticeController {
 
     @PostMapping("addContact")
     public boolean createContact(@RequestBody Contact contact) { return noticeService.createNewContact(contact);}
+
+    @PostMapping("addAnalysisRequest")
+    public boolean addAnalysisRequest(@RequestBody AnalysisRequest analysisRequest) { return noticeService.createNewAnalysisRequest(analysisRequest);}
 
 
 //    @Bean

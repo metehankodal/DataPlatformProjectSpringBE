@@ -5,6 +5,8 @@ import com.example.tezspringbe.models.Contact;
 import com.example.tezspringbe.models.Notice;
 import com.example.tezspringbe.repos.ContactRepo;
 import com.example.tezspringbe.repos.NoticeRepo;
+import com.example.tezspringbe.models.AnalysisRequest;
+import com.example.tezspringbe.repos.AnalysisRequestRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ public class NoticeService {
 
     private  NoticeRepo noticeRepo;
     private ContactRepo contactRepo;
+    private AnalysisRequestRepo analysisRequestRepo;
 
     public List<Notice> getAllNotice() {
         List<Notice> notices = noticeRepo.findAll();
@@ -30,6 +33,17 @@ public class NoticeService {
     public boolean createNewContact(Contact contact){
         Contact contactResponse = contactRepo.insert(contact);
         if(contactResponse != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+    public boolean createNewAnalysisRequest(AnalysisRequest analysisRequest){
+        AnalysisRequest analysisRequestResponse = analysisRequestRepo.insert(analysisRequest);
+        if(analysisRequestResponse != null) {
             return true;
         }
         else {
