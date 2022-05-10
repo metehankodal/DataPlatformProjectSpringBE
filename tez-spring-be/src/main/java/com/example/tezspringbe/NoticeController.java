@@ -1,6 +1,7 @@
 package com.example.tezspringbe;
 
 
+import com.example.tezspringbe.models.Admins;
 import com.example.tezspringbe.models.AnalysisRequest;
 import com.example.tezspringbe.models.Contact;
 import com.example.tezspringbe.models.Notice;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Hashtable;
 import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -38,6 +40,9 @@ public class NoticeController {
     @PostMapping("newData")
     @ResponseBody
     public boolean addNewDataRequest(@RequestParam("files") MultipartFile file, @RequestParam("Info") String Info  ) {return noticeService.createNewDataRequest(file,Info);};
+
+    @PostMapping("/checkLogin")
+    public boolean checkLogs(@RequestBody String credentials) { return noticeService.checkLogin(credentials);}
 
 //    @Bean
 //    CommandLineRunner runner(NoticeRepo repo) {

@@ -1,14 +1,8 @@
 package com.example.tezspringbe.services;
 
 
-import com.example.tezspringbe.models.Contact;
-import com.example.tezspringbe.models.NewDataRequestToDb;
-import com.example.tezspringbe.models.Notice;
-import com.example.tezspringbe.repos.ContactRepo;
-import com.example.tezspringbe.repos.NewDataRequestRepo;
-import com.example.tezspringbe.repos.NoticeRepo;
-import com.example.tezspringbe.models.AnalysisRequest;
-import com.example.tezspringbe.repos.AnalysisRequestRepo;
+import com.example.tezspringbe.models.*;
+import com.example.tezspringbe.repos.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,10 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -31,6 +22,7 @@ public class NoticeService {
     private ContactRepo contactRepo;
     private AnalysisRequestRepo analysisRequestRepo;
     private NewDataRequestRepo newDataRequestRepo;
+    private AdminsRepo adminsRepo;
     private static String UPLOADED_FOLDER = "D:\\uploaded_data_sets"; //burası farklı olabilir sende.
 
     public List<Notice> getAllNotice() {
@@ -106,6 +98,24 @@ public class NoticeService {
             System.out.println("Hata alırsan 29'a bak.");
         }
         return true;
+    }
+    public boolean checkLogin(String credentials) {
+        String[] arrOfStr = credentials.split(" ",2);
+        String usernameInput = arrOfStr[0];
+        String passwordInput = arrOfStr[1];
+        boolean loggedIn = false;
+        List<Admins> adminsList = adminsRepo.findAll();
+        for(Admins admin:adminsList)
+        {
+            if (admin.getUsername().equals(usernameInput))
+            {
+                if(admin.getPassword().equals(passwordInput)){
+                    loggedIn = true;
+                    break;
+                }
+            }
+        }
+        return loggedIn;
     }
 }
 
