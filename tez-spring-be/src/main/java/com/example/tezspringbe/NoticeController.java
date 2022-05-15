@@ -1,9 +1,11 @@
 package com.example.tezspringbe;
 
 
+import com.example.tezspringbe.models.Admins;
 import com.example.tezspringbe.models.AnalysisRequest;
 import com.example.tezspringbe.models.Contact;
 import com.example.tezspringbe.models.Notice;
+import com.example.tezspringbe.repos.AdminsRepo;
 import com.example.tezspringbe.repos.NoticeRepo;
 import com.example.tezspringbe.services.NoticeService;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Hashtable;
 import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -39,6 +42,9 @@ public class NoticeController {
     @ResponseBody
     public boolean addNewDataRequest(@RequestParam("files") MultipartFile file, @RequestParam("Info") String Info  ) {return noticeService.createNewDataRequest(file,Info);};
 
+    @PostMapping("/checkLogin")
+    public boolean checkLogs(@RequestBody String credentials) { return noticeService.checkLogin(credentials);}
+
 //    @Bean
 //    CommandLineRunner runner(NoticeRepo repo) {
 //        return args -> {
@@ -53,6 +59,12 @@ public class NoticeController {
 //            repo.insert(notice1);
 //        };
 //    }
+    /*@Bean
+    CommandLineRunner runner(AdminsRepo repo) {
+        return args -> {
+            repo.insert(new Admins("admin","admin"));
+        };
+    }*/
 
 
 //    SILME SAKIN DAHA SERVIS YAZMADIM BURAYA BIR DAHA UGRASTIRMA BENI
