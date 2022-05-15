@@ -5,6 +5,7 @@ import com.example.tezspringbe.models.Admins;
 import com.example.tezspringbe.models.AnalysisRequest;
 import com.example.tezspringbe.models.Contact;
 import com.example.tezspringbe.models.Notice;
+import com.example.tezspringbe.repos.AdminsRepo;
 import com.example.tezspringbe.repos.NoticeRepo;
 import com.example.tezspringbe.services.NoticeService;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,12 @@ public class NoticeController {
 //            repo.insert(notice1);
 //        };
 //    }
+    /*@Bean
+    CommandLineRunner runner(AdminsRepo repo) {
+        return args -> {
+            repo.insert(new Admins("admin","admin"));
+        };
+    }*/
 
 
 //    SILME SAKIN DAHA SERVIS YAZMADIM BURAYA BIR DAHA UGRASTIRMA BENI
