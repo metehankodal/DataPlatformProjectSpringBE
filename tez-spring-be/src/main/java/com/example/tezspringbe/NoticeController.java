@@ -44,6 +44,10 @@ public class NoticeController {
     @PostMapping("/checkLogin")
     public boolean checkLogs(@RequestBody String credentials) { return noticeService.checkLogin(credentials);}
 
+    @PostMapping("adminNewData")
+    @ResponseBody
+    public boolean adminAddDataset(@RequestParam("files") MultipartFile file, @RequestParam("Info") String Info  ) {return noticeService.adminAddDataset(file,Info);};
+
 //    @Bean
 //    CommandLineRunner runner(NoticeRepo repo) {
 //        return args -> {
@@ -65,7 +69,3 @@ public class NoticeController {
 
 
 }
-
-
-
-
