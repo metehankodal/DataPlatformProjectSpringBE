@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 @Data
 @Document
 public class Notice {
-    @Id
-    private String id;
     private LocalDate dateOfPublish;
     private String noticeHeader;
     private String noticeBody;
