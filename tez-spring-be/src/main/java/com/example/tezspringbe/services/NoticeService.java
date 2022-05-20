@@ -221,5 +221,19 @@ public class NoticeService {
         }
 
     }
+
+    public List<Dataset> getDataRequest() {
+
+        List<Dataset> result = datasetRepo.getAllOnaylanmadi("onaylanmadi");
+
+        if(result.isEmpty()) {
+            System.out.println("dataRequestler alinamadi");
+            return null;
+        }
+        else {
+            return result;
+        }
+
+    }
 }
 

@@ -1,10 +1,7 @@
 package com.example.tezspringbe;
 
 
-import com.example.tezspringbe.models.Admins;
-import com.example.tezspringbe.models.AnalysisRequest;
-import com.example.tezspringbe.models.Contact;
-import com.example.tezspringbe.models.Notice;
+import com.example.tezspringbe.models.*;
 import com.example.tezspringbe.repos.AdminsRepo;
 import com.example.tezspringbe.repos.NoticeRepo;
 import com.example.tezspringbe.services.NoticeService;
@@ -58,6 +55,11 @@ public class NoticeController {
 
     @DeleteMapping("/deleteDataRequest")
     public boolean deleteDataRequest(@RequestParam (value="paramId")  String paramId) { return noticeService.deleteDataRequestFromDb(paramId);};
+
+    @GetMapping("getUnapprovedDataRequests")
+    public List<Dataset> getDataRequest() {
+        return noticeService.getDataRequest();
+    }
 
 //    @Bean
 //    CommandLineRunner runner(NoticeRepo repo) {
