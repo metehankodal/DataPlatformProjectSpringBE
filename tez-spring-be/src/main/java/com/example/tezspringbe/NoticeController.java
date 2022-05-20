@@ -52,6 +52,13 @@ public class NoticeController {
     @ResponseBody
     public boolean adminAddDataset(@RequestParam("files") MultipartFile file, @RequestParam("Info") String Info  ) {return noticeService.adminAddDataset(file,Info);};
 
+    @PostMapping("/updateNewDataRequestToDb")
+    @ResponseBody
+    public boolean updateNewDataRequestToDb(@RequestBody String paramId) { return noticeService.updateNewDataRequestStatus(paramId);};
+
+    @DeleteMapping("/deleteDataRequest")
+    public boolean deleteDataRequest(@RequestParam (value="paramId")  String paramId) { return noticeService.deleteDataRequestFromDb(paramId);};
+
 //    @Bean
 //    CommandLineRunner runner(NoticeRepo repo) {
 //        return args -> {
