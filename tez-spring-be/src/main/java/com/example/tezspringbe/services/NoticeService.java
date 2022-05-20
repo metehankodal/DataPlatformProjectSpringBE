@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -116,6 +117,18 @@ public class NoticeService {
             }
         }
         return loggedIn;
+    }
+
+    public boolean addNotice(Notice notice){
+        notice.setDateOfPublish(LocalDate.now());
+        Notice noticeResponse = noticeRepo.insert(notice);
+        if(noticeResponse != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
     }
 }
 

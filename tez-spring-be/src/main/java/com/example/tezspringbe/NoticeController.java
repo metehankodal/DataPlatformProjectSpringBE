@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,6 +45,9 @@ public class NoticeController {
 
     @PostMapping("/checkLogin")
     public boolean checkLogs(@RequestBody String credentials) { return noticeService.checkLogin(credentials);}
+
+    @PostMapping("addNotice")
+    public boolean addNotice(@RequestBody Notice notice) { return noticeService.addNotice(notice);}
 
 //    @Bean
 //    CommandLineRunner runner(NoticeRepo repo) {
