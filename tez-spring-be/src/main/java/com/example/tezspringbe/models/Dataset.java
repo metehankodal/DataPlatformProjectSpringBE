@@ -7,17 +7,19 @@ package com.example.tezspringbe.models;
  * @created 05
  * @author meteh
  */
-public class NewDataRequestToDb {
+public class Dataset {
     private String senderName;
     private String email;
+    private String description;
     private String dataPathOfDataSet;
     private String onaylandiMi;
     private String type;
 
 
-    public NewDataRequestToDb(String senderName, String email, String dataPathOfDataSet,String onaylandiMi,String type) {
+    public Dataset(String senderName, String email, String description, String dataPathOfDataSet, String onaylandiMi, String type) {
         this.senderName = senderName;
         this.email = email;
+        this.description = description;
         this.dataPathOfDataSet = dataPathOfDataSet;
         this.onaylandiMi = onaylandiMi;
         this.type = type;
@@ -63,4 +65,3 @@ public class NewDataRequestToDb {
         this.onaylandiMi = onaylandiMi;
     }
 }
-

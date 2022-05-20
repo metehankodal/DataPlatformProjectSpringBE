@@ -22,7 +22,7 @@ public class NoticeService {
     private  NoticeRepo noticeRepo;
     private ContactRepo contactRepo;
     private AnalysisRequestRepo analysisRequestRepo;
-    private NewDataRequestRepo newDataRequestRepo;
+    private DatasetRepo datasetRepo;
     private AdminsRepo adminsRepo;
     private static String UPLOADED_FOLDER = "D:\\uploaded_data_sets"; //burası farklı olabilir sende.
 
@@ -53,7 +53,6 @@ public class NoticeService {
         }
 
     }
-
     public boolean createNewDataRequest(MultipartFile newFile, String newInfo)  {
 
         if(newFile.isEmpty()) {
@@ -67,10 +66,11 @@ public class NoticeService {
             String[] infos = newInfo.split(",");
             String senderName = null;
             String senderEmail = null;
+            String description = null;
 
             for(int i =0;i<infos.length;i++) {
                 String[] temp = infos[i].split(":");
-                if(i==2) {
+                if(i==3) {
                     break;
                 }
                 if(temp[0].contains("Email")) {
@@ -83,13 +83,20 @@ public class NoticeService {
                     senderName = temp[1];
                     senderName = senderName.replaceAll("\"","");
                 }
+                else if (temp[0].contains("description"))
+                {
+                    description = temp[1];
+                    description = description.replace("{","");
+                    description = description.replace("}","");
+                    description = description.replace("\"","");
+                }
 
             }
             System.out.println(senderName);
             System.out.println(senderEmail);
-            NewDataRequestToDb newDataRequestToDb = new NewDataRequestToDb(senderName,senderEmail,pathOfFile,"onaylanmadi",newFile.getContentType());
+            Dataset newDataRequestToDb = new Dataset(senderName,senderEmail,description,pathOfFile,"onaylanmadi",newFile.getContentType());
             Files.write(path,bytes);
-            newDataRequestRepo.insert(newDataRequestToDb);
+            datasetRepo.insert(newDataRequestToDb);
 
 
 
@@ -129,6 +136,59 @@ public class NoticeService {
             return false;
         }
 
+    }
+    public boolean adminAddDataset(MultipartFile newFile, String newInfo)  {
+
+        if(newFile.isEmpty()) {
+            return false;
+        }
+        try {
+            byte[] bytes = newFile.getBytes();
+            String pathOfFile = UPLOADED_FOLDER.concat("\\").concat(newFile.getOriginalFilename().toLowerCase());
+            Path path = Paths.get(pathOfFile);
+
+            String[] infos = newInfo.split(",");
+            String senderName = null;
+            String senderEmail = null;
+            String description = null;
+
+            for(int i =0;i<infos.length;i++) {
+                String[] temp = infos[i].split(":");
+                if(i==3) {
+                    break;
+                }
+                if(temp[0].contains("Email")) {
+                    senderEmail = temp[1];
+                    senderEmail = senderEmail.replace("{","");
+                    senderEmail = senderEmail.replace("}","");
+                    senderEmail = senderEmail.replace("\"","");
+                }
+                else if (temp[0].contains("Name")) {
+                    senderName = temp[1];
+                    senderName = senderName.replaceAll("\"","");
+                }
+                else if (temp[0].contains("description"))
+                {
+                    description = temp[1];
+                    description = description.replace("{","");
+                    description = description.replace("}","");
+                    description = description.replace("\"","");
+                }
+            }
+            System.out.println(senderName);
+            System.out.println(senderEmail);
+            Dataset adminDataset = new Dataset(senderName,senderEmail,description,pathOfFile,"onaylandi",newFile.getContentType());
+            Files.write(path,bytes);
+            datasetRepo.insert(adminDataset);
+
+
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Hata alırsan 29'a bak.");
+        }
+        return true;
     }
 }
 

@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,6 +47,10 @@ public class NoticeController {
 
     @PostMapping("addNotice")
     public boolean addNotice(@RequestBody Notice notice) { return noticeService.addNotice(notice);}
+
+    @PostMapping("adminNewData")
+    @ResponseBody
+    public boolean adminAddDataset(@RequestParam("files") MultipartFile file, @RequestParam("Info") String Info  ) {return noticeService.adminAddDataset(file,Info);};
 
 //    @Bean
 //    CommandLineRunner runner(NoticeRepo repo) {
