@@ -132,6 +132,7 @@ public class NoticeService {
             return null;
         }
         else {
+            System.out.println("commit");
             return result;
         }
 
