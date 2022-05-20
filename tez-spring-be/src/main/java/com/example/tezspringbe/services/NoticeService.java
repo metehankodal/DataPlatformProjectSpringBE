@@ -190,5 +190,36 @@ public class NoticeService {
         }
         return true;
     }
+    public boolean updateNewDataRequestStatus(String paramId) {
+        Optional<Dataset> oldVersion = datasetRepo.findById(paramId);
+
+        if(oldVersion.isEmpty()) {
+            return false;
+        }
+
+        else {
+            Dataset newVersion = oldVersion.get();
+            newVersion.setOnaylandiMi("onaylandi");
+            datasetRepo.save(newVersion);
+            return true;
+        }
+
+
+    }
+
+    public boolean deleteDataRequestFromDb(String paramId) {
+
+        Optional<Dataset> response = datasetRepo.findById(paramId);
+
+        if(response.isEmpty()) {
+            return false;
+        }
+        else {
+            Dataset deleteThis = response.get();
+            datasetRepo.delete(deleteThis);
+            return true;
+        }
+
+    }
 }
 
