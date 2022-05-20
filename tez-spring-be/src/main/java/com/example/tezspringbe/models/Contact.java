@@ -1,5 +1,10 @@
 package com.example.tezspringbe.models;
 
+import lombok.Data;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  * @Author meteh
  * @create 2.05.2022 18:41
@@ -7,7 +12,12 @@ package com.example.tezspringbe.models;
  * @created 05
  * @author meteh
  */
+
+@Data
+@Document
 public class Contact {
+    @Id
+    private String id;
     private String nameSurname;
     private String email;
     private String content;

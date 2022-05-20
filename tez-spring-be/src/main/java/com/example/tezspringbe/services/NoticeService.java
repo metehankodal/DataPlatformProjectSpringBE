@@ -4,7 +4,12 @@ package com.example.tezspringbe.services;
 import com.example.tezspringbe.models.*;
 import com.example.tezspringbe.repos.*;
 import lombok.AllArgsConstructor;
+
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -116,6 +121,52 @@ public class NoticeService {
             }
         }
         return loggedIn;
+    }
+
+    public List<NewDataRequestToDb> getDataRequest() {
+
+        List<NewDataRequestToDb> result = newDataRequestRepo.getAllOnaylanmadi("onaylanmadi");
+
+        if(result.isEmpty()) {
+            System.out.println("a");
+            return null;
+        }
+        else {
+            return result;
+        }
+
+    }
+
+    public boolean updateNewDataRequestStatus(String paramId) {
+        Optional<NewDataRequestToDb> oldVersion = newDataRequestRepo.findById(paramId);
+
+        if(oldVersion.isEmpty()) {
+            return false;
+        }
+
+        else {
+            NewDataRequestToDb newVersion = oldVersion.get();
+            newVersion.setOnaylandiMi("onaylandi");
+            newDataRequestRepo.save(newVersion);
+            return true;
+        }
+
+
+    }
+
+    public boolean deleteDataRequestFromDb(String paramId) {
+
+        Optional<NewDataRequestToDb> response = newDataRequestRepo.findById(paramId);
+
+        if(response.isEmpty()) {
+            return false;
+        }
+        else {
+            NewDataRequestToDb deleteThis = response.get();
+            newDataRequestRepo.delete(deleteThis);
+            return true;
+        }
+
     }
 }
 

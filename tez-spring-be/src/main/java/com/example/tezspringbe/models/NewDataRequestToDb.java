@@ -1,5 +1,9 @@
 package com.example.tezspringbe.models;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  * @Author meteh
  * @create 6.05.2022 20:09
@@ -7,7 +11,11 @@ package com.example.tezspringbe.models;
  * @created 05
  * @author meteh
  */
+@Data
+@Document
 public class NewDataRequestToDb {
+    @Id
+    private String id;
     private String senderName;
     private String email;
     private String dataPathOfDataSet;

@@ -1,10 +1,7 @@
 package com.example.tezspringbe;
 
 
-import com.example.tezspringbe.models.Admins;
-import com.example.tezspringbe.models.AnalysisRequest;
-import com.example.tezspringbe.models.Contact;
-import com.example.tezspringbe.models.Notice;
+import com.example.tezspringbe.models.*;
 import com.example.tezspringbe.repos.AdminsRepo;
 import com.example.tezspringbe.repos.NoticeRepo;
 import com.example.tezspringbe.services.NoticeService;
@@ -44,6 +41,18 @@ public class NoticeController {
 
     @PostMapping("/checkLogin")
     public boolean checkLogs(@RequestBody String credentials) { return noticeService.checkLogin(credentials);}
+
+    @GetMapping("getUnapprovedDataRequests")
+    public List<NewDataRequestToDb> getDataRequest() {
+        return noticeService.getDataRequest();
+    }
+
+    @PostMapping("/updateNewDataRequestToDb")
+    @ResponseBody
+    public boolean updateNewDataRequestToDb(@RequestBody String paramId) { return noticeService.updateNewDataRequestStatus(paramId);};
+
+    @DeleteMapping("/deleteDataRequest")
+    public boolean deleteDataRequest(@RequestParam (value="paramId")  String paramId) { return noticeService.deleteDataRequestFromDb(paramId);};
 
 //    @Bean
 //    CommandLineRunner runner(NoticeRepo repo) {

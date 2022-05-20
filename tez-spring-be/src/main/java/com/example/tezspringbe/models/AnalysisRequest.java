@@ -1,6 +1,13 @@
 package com.example.tezspringbe.models;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Data
+@Document
 public class AnalysisRequest {
+    @Id
     private String dataset_id;
     private String nameSurname;
     private String email;
