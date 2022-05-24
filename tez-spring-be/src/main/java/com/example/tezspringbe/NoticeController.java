@@ -61,6 +61,16 @@ public class NoticeController {
         return noticeService.getDataRequest();
     }
 
+    @GetMapping("getApprovedDatasets")
+    public List<Dataset> getDatasets(){
+        return noticeService.getDatasets();
+    }
+
+    @GetMapping("getAdminNo")
+    public List<Integer> getNoOfAdmins(){
+        return noticeService.getAdminNumbers();
+    }
+
 //    @Bean
 //    CommandLineRunner runner(NoticeRepo repo) {
 //        return args -> {
