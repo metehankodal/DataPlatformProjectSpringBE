@@ -4,6 +4,7 @@ package com.example.tezspringbe.services;
 import com.example.tezspringbe.models.*;
 import com.example.tezspringbe.repos.*;
 import lombok.AllArgsConstructor;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -234,6 +235,30 @@ public class NoticeService {
             return result;
         }
 
+    }
+    public List<Dataset> getDatasets(){
+        List<Dataset> datasetList = datasetRepo.getAllOnaylandi();
+
+        if(datasetList.isEmpty()) {
+            System.out.println("datasetler alinamadi");
+            return null;
+        }
+        else {
+            return datasetList;
+        }
+    }
+    public List<Integer> getAdminNumbers(){
+        List<Integer> my_list = new ArrayList<>();
+        List<Dataset> datasetList = datasetRepo.getAllOnaylandi();
+        List<Dataset> result = datasetRepo.getAllOnaylanmadi("onaylanmadi");
+        my_list.add(datasetList.size());
+        Long x = noticeRepo.count();
+        my_list.add(x.intValue());
+        my_list.add(result.size());
+        Long y = analysisRequestRepo.count();
+        my_list.add(y.intValue());
+
+        return my_list;
     }
 }
 

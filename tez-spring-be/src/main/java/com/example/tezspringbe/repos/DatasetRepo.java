@@ -13,4 +13,8 @@ import java.util.List;
 public interface DatasetRepo extends MongoRepository<Dataset,String> {
     @Query("{onaylandiMi:onaylanmadi}")
     List<Dataset> getAllOnaylanmadi(String onaylandimi);
+
+    @Query("{onaylandiMi:onaylandi}")
+    List<Dataset> getAllOnaylandi();
+
 }

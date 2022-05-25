@@ -1,5 +1,6 @@
 package com.example.tezspringbe.models;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,6 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @created 05
  * @author meteh
  */
+@Data
+@Document
 public class Dataset {
     @Id
     private String id;
