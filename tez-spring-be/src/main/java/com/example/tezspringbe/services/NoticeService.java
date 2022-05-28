@@ -3,6 +3,7 @@ package com.example.tezspringbe.services;
 
 import com.example.tezspringbe.models.*;
 import com.example.tezspringbe.repos.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,9 @@ public class NoticeService {
     private AnalysisRequestRepo analysisRequestRepo;
     private DatasetRepo datasetRepo;
     private AdminsRepo adminsRepo;
+    private AnalysisRequestAdminRepo analysisRequestAdminRepo;
     private static String UPLOADED_FOLDER = "D:\\uploaded_data_sets"; //burası farklı olabilir sende.
+    private static String UPLOADED_DATA_ANALYSIS = "D:\\uploaded_data_analysis";
 
     public List<Notice> getAllNotice() {
         List<Notice> notices = noticeRepo.findAll();
@@ -237,7 +240,7 @@ public class NoticeService {
 
     }
     public List<Dataset> getDatasets(){
-        List<Dataset> datasetList = datasetRepo.getAllOnaylandi();
+        List<Dataset> datasetList = datasetRepo.getAllOnaylandi("onaylandi");
 
         if(datasetList.isEmpty()) {
             System.out.println("datasetler alinamadi");
@@ -249,7 +252,7 @@ public class NoticeService {
     }
     public List<Integer> getAdminNumbers(){
         List<Integer> my_list = new ArrayList<>();
-        List<Dataset> datasetList = datasetRepo.getAllOnaylandi();
+        List<Dataset> datasetList = datasetRepo.getAllOnaylandi("onaylandi");
         List<Dataset> result = datasetRepo.getAllOnaylanmadi("onaylanmadi");
         my_list.add(datasetList.size());
         Long x = noticeRepo.count();
@@ -260,5 +263,144 @@ public class NoticeService {
 
         return my_list;
     }
+
+    public List<ApprovedDataSet> getAllApprovedDataSetsMapped() {
+        List<Dataset> result = datasetRepo.getAllOnaylandi("onaylandi");
+
+        if(result.isEmpty()) {
+            System.out.println("dataRequestler alinamadi");
+            return null;
+        }
+
+        else {
+            List<ApprovedDataSet> approvedDataSetList = new ArrayList<ApprovedDataSet>();
+
+            for(int x=0;x<result.size();x++) {
+                Dataset mapThisDataSet = result.get(x);
+                ApprovedDataSet approvedDataSet = new ApprovedDataSet(mapThisDataSet.getId(),getDataSetName(mapThisDataSet.getDataPathOfDataSet()));
+                approvedDataSetList.add(approvedDataSet);
+            }
+
+            return  approvedDataSetList;
+        }
+    }
+
+    private String getDataSetName(String fullPath) {
+        String[] strArray = fullPath.split("\\\\");
+        return strArray[strArray.length-1];
+    }
+
+
+    public boolean saveDataAnalysisToDb(MultipartFile file, String info) {
+        if(file.isEmpty()) {
+            return false;
+        }
+        else {
+            try {
+                byte[] bytes = file.getBytes();
+                String pathOfFile = UPLOADED_DATA_ANALYSIS.concat("\\").concat(file.getOriginalFilename().toLowerCase());
+                Path path = Paths.get(pathOfFile);
+
+                String[] infos = info.split(",");
+                String senderName = null;
+                String dataset_id = null;
+                String description = null;
+                for(int i = 0;i<infos.length;i++) {
+                    String[] temp = infos[i].split(":");
+                    if(temp[0].contains("dataset")) {
+                        dataset_id = temp[1];
+                        dataset_id = dataset_id.replace("\"","");
+                    }
+                    else if (temp[0].contains("sender")) {
+                        senderName = temp[1];
+                        senderName = senderName.replaceAll("}"," ");
+                        senderName = senderName.replace("\"","");
+
+                    }
+                    else {
+                        description = temp[1];
+                        description = description.replace("\"","");
+                    }
+                }
+
+
+                DatasetAnalysis datasetAnalysis = new DatasetAnalysis(dataset_id,senderName,pathOfFile,description);
+                Files.write(path,bytes);
+                analysisRequestAdminRepo.insert(datasetAnalysis);
+
+
+
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Hata alırsan 30'a bak.");
+            }
+            return true;
+        }
+    }
+
+
+
+    public List<ApproveAnalysisRequestResponse> getDataAnalysisRequests() {
+        List<AnalysisRequest> analysisRequestList = analysisRequestRepo.findAll();
+        List<ApproveAnalysisRequestResponse> responseArrayList = new ArrayList<ApproveAnalysisRequestResponse>();
+
+        for(int x = 0 ; x<analysisRequestList.size();x++) {
+            AnalysisRequest analysisRequest = analysisRequestList.get(x);
+
+            if(analysisRequest.isShowInFE()) {
+                ApproveAnalysisRequestResponse approveAnalysisRequestResponse = new ApproveAnalysisRequestResponse(analysisRequest.getId(),
+                        "dataSetName",analysisRequest.getNameSurname(),analysisRequest.getEmail(),analysisRequest.getRequest());
+
+                System.out.println(analysisRequest.getId());
+                Optional<Dataset> datasetOptional = datasetRepo.findById(analysisRequest.getId());
+
+                Dataset dataset = datasetOptional.get();
+
+                String[] nameSplit = dataset.getDataPathOfDataSet().split("\\\\");
+                String nameOfDataSet = nameSplit[nameSplit.length-1];
+
+                approveAnalysisRequestResponse.setData_set_name(nameOfDataSet);
+
+                responseArrayList.add(approveAnalysisRequestResponse);
+            }
+
+            else {
+                continue;
+            }
+        }
+        return responseArrayList;
+    }
+
+    public boolean saveDataAnalysisComeFromUser(MultipartFile file, String info) throws IOException {
+        DatasetAnalysis datasetAnalysis = new ObjectMapper().readValue(info,DatasetAnalysis.class);
+
+        byte[] bytes = file.getBytes();
+        String pathOfFile = UPLOADED_DATA_ANALYSIS.concat("\\").concat(file.getOriginalFilename().toLowerCase());
+        Path path = Paths.get(pathOfFile);
+
+        Files.write(path,bytes);
+
+        datasetAnalysis.setPathOfAnalysis(pathOfFile);
+
+        analysisRequestAdminRepo.insert(datasetAnalysis);
+
+
+        List<AnalysisRequest> oldVersion = analysisRequestRepo.findByRelatedId(datasetAnalysis.getRelated_data_set_id());
+
+        if(oldVersion.isEmpty()) {
+            return false;
+        }
+
+        else {
+            AnalysisRequest newVersion = oldVersion.get(0);
+            newVersion.setShowInFE(false);
+
+            analysisRequestRepo.save(newVersion);
+            return true;
+        }
+    }
+
+
 }
 

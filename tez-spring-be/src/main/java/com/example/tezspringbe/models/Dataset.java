@@ -33,6 +33,14 @@ public class Dataset {
         this.type = type;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public String getSenderName() {
         return senderName;
     }
