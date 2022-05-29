@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Hashtable;
@@ -70,6 +71,21 @@ public class NoticeController {
     public List<Integer> getNoOfAdmins(){
         return noticeService.getAdminNumbers();
     }
+
+    @GetMapping("getApprovedDataSetsMapped")
+    public List<ApprovedDataSet> getApprovedDataSetsMapped() {return noticeService.getAllApprovedDataSetsMapped();};
+
+    @PostMapping("saveDataAnalysis")
+    @ResponseBody
+    public boolean saveDataAnalysis(@RequestParam("files") MultipartFile file, @RequestParam("Info") String Info) { return noticeService.saveDataAnalysisToDb(file,Info);};
+
+    @GetMapping("getDataAnalysisRequests")
+    public List<ApproveAnalysisRequestResponse> getDataAnalysisRequests(){return noticeService.getDataAnalysisRequests();}
+
+    @PostMapping("saveDataAnalyisComeFromUser")
+    @ResponseBody
+    public boolean saveDataAnalyisComeFromUser(@RequestParam("files") MultipartFile file,@RequestParam("Info") String Info) throws IOException {return noticeService.saveDataAnalysisComeFromUser(file,Info);};
+
 
 //    @Bean
 //    CommandLineRunner runner(NoticeRepo repo) {

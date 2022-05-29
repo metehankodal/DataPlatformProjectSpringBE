@@ -1,11 +1,27 @@
 package com.example.tezspringbe.models;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
+@Data
 public class AnalysisRequest {
+    @Id
+    private String id;
     private String dataset_id;
     private String nameSurname;
     private String email;
     private String request;
+    private boolean showInFE;
 
+    public boolean isShowInFE() {
+        return showInFE;
+    }
+
+    public void setShowInFE(boolean showInFE) {
+        this.showInFE = showInFE;
+    }
 
     public String getId() {
         return dataset_id;
