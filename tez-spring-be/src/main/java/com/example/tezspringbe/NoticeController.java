@@ -17,6 +17,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Optional;
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("api/v1/notice")
@@ -85,6 +87,12 @@ public class NoticeController {
     @PostMapping("saveDataAnalyisComeFromUser")
     @ResponseBody
     public boolean saveDataAnalyisComeFromUser(@RequestParam("files") MultipartFile file,@RequestParam("Info") String Info) throws IOException {return noticeService.saveDataAnalysisComeFromUser(file,Info);};
+
+    @GetMapping("getDatasetById")
+    public Optional<Dataset> getDatasetById(@RequestParam (value="datasetId")  String datasetId){return noticeService.getDatasetById(datasetId);}
+
+    @GetMapping("getAnalysisReqList")
+    public List<DatasetAnalysis> getAnalysisReqList(@RequestParam (value="datasetId")  String datasetId){return noticeService.getAnalysisReqList(datasetId);}
 
 
 //    @Bean

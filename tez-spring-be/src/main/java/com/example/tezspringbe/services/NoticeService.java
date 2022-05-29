@@ -400,6 +400,15 @@ public class NoticeService {
             return true;
         }
     }
+    public Optional<Dataset> getDatasetById(String id){
+        Optional<Dataset> selectedDataset = datasetRepo.findById(id);
+        return  selectedDataset;
+    }
+    public List<DatasetAnalysis> getAnalysisReqList(String id){
+        List<DatasetAnalysis> analysisList = analysisRequestAdminRepo.findByRelatedId(id);
+        return  analysisList;
+    }
+
 
 
 }
