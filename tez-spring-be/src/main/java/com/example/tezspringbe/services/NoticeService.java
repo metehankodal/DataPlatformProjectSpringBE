@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,6 +49,7 @@ public class NoticeService {
     }
 
     public boolean createNewAnalysisRequest(AnalysisRequest analysisRequest){
+        analysisRequest.setShowInFE(true);
         AnalysisRequest analysisRequestResponse = analysisRequestRepo.insert(analysisRequest);
         if(analysisRequestResponse != null) {
             return true;
@@ -258,8 +260,8 @@ public class NoticeService {
         Long x = noticeRepo.count();
         my_list.add(x.intValue());
         my_list.add(result.size());
-        Long y = analysisRequestRepo.count();
-        my_list.add(y.intValue());
+        List<AnalysisRequest> analysisRequestList = analysisRequestRepo.findByShowInFe(true);
+        my_list.add(analysisRequestList.size());
 
         return my_list;
     }
@@ -400,6 +402,38 @@ public class NoticeService {
             return true;
         }
     }
+
+
+    public List<Dataset> searchDataSetsWithKeyword(String keyword) {
+        List<Dataset> searchResultTitles = datasetRepo.findByTitlesContain(keyword);
+
+        List<Dataset> searchResultDescriptions = datasetRepo.findByDescriptionsContain(keyword);
+
+        Set<Dataset> set = new LinkedHashSet<>(searchResultTitles);
+
+        set.addAll(searchResultDescriptions);
+
+        List<Dataset> result = new ArrayList<Dataset>(set);
+
+        return  result;
+    }
+
+    public Dataset getDatasetById(String id){
+        Optional<Dataset> selectedDataset = datasetRepo.findById(id);
+        if(selectedDataset.isEmpty()) {
+            return null;
+        }
+        else {
+            return selectedDataset.get();
+        }
+    }
+
+    public List<DatasetAnalysis> getAnalysisReqList(String id){
+        List<DatasetAnalysis> analysisList = analysisRequestAdminRepo.findByRelatedId(id);
+        return analysisList;
+    }
+
+
 
 
 }

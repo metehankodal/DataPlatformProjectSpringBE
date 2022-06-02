@@ -17,4 +17,9 @@ public interface DatasetRepo extends MongoRepository<Dataset,String> {
     @Query("{onaylandiMi:onaylandi}")
     List<Dataset> getAllOnaylandi(String onaylandimi);
 
+    @Query("{dataPathOfDataSet:{$regex:?0}}")
+    List<Dataset> findByTitlesContain(String keyword);
+
+    @Query("{description:{$regex:?0}}")
+    List<Dataset> findByDescriptionsContain(String keyword);
 }

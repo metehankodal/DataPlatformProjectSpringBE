@@ -9,10 +9,15 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Hashtable;
@@ -22,7 +27,7 @@ import java.util.List;
 @RequestMapping("api/v1/notice")
 @AllArgsConstructor
 public class NoticeController {
-
+    private final String LOCAL_PATH_OF_ANALYSIS = "D:\\uploaded_data_analysis\\";
     private  NoticeService noticeService;
 
     @GetMapping("/getAllNotices")
@@ -85,6 +90,31 @@ public class NoticeController {
     @PostMapping("saveDataAnalyisComeFromUser")
     @ResponseBody
     public boolean saveDataAnalyisComeFromUser(@RequestParam("files") MultipartFile file,@RequestParam("Info") String Info) throws IOException {return noticeService.saveDataAnalysisComeFromUser(file,Info);};
+
+    @GetMapping("searchDataSetsWithKeyword")
+    public List<Dataset> searchDataSetsWithKeyword(@RequestParam(value="query") String keyword) {
+        return noticeService.searchDataSetsWithKeyword(keyword);
+    }
+
+    @GetMapping("getDataSetById")
+    public Dataset getDataSetById(@RequestParam(value="datasetid") String datasetid) {
+        return noticeService.getDatasetById(datasetid);
+    }
+
+    @GetMapping("getAnalysisById")
+    public List<DatasetAnalysis> getAnalysisById(@RequestParam(value="datasetid") String datasetid) {
+        return noticeService.getAnalysisReqList(datasetid);
+    }
+
+    @GetMapping("getImage")
+    public @ResponseBody byte[] getImage(@RequestParam(value="fullPath") String fullPath) throws IOException {
+
+        String pathOfFile = LOCAL_PATH_OF_ANALYSIS.concat(fullPath);
+        Path imagePath = Path.of(pathOfFile);
+        return Files.readAllBytes(imagePath);
+    }
+
+
 
 
 //    @Bean
