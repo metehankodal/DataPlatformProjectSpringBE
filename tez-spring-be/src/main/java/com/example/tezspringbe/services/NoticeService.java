@@ -405,6 +405,7 @@ public class NoticeService {
 
 
     public List<Dataset> searchDataSetsWithKeyword(String keyword) {
+        keyword = keyword.toLowerCase();
         List<Dataset> searchResultTitles = datasetRepo.findByTitlesContain(keyword);
 
         List<Dataset> searchResultDescriptions = datasetRepo.findByDescriptionsContain(keyword);
