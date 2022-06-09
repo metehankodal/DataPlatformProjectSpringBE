@@ -139,7 +139,7 @@ public class NoticeController {
     }*/
 
 
-//    SILME SAKIN DAHA SERVIS YAZMADIM BURAYA BIR DAHA UGRASTIRMA BENI
+
 
 
 
